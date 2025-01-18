@@ -9,8 +9,6 @@ public class HealthBar : MonoBehaviour
     private Slider slider;
     public TMP_Text healthCounter;
 
-    public GameObject playerState;
-
     private float currentHealth, maxHealth;
 
     // Start is called before the first frame update

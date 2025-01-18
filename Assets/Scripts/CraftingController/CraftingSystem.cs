@@ -156,6 +156,8 @@ public class CraftingSystem : MonoBehaviour
     {
         int rock_count = 0;
         int stick_count = 0;
+        int log_count = 0;
+
 
         inventoryItemList = InventorySystem.instance.itemList;
 
@@ -169,7 +171,9 @@ public class CraftingSystem : MonoBehaviour
                 case "Stick":
                     stick_count++;
                     break;
-
+                case "Log":
+                    log_count++;
+                    break;
             }
         }
 

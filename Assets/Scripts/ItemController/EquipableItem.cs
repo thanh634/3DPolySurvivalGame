@@ -15,9 +15,23 @@ public class EquipableItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GameObject selectedTree = SelectionManager.instance.selectedTree;
         if(Input.GetMouseButtonDown(0) && (!InventorySystem.instance.isOpen && !CraftingSystem.instance.isOpen))
         {
+
             animator.SetTrigger("isHit");
+
         }
     }
+
+    public void Hit()
+    {
+        GameObject selectedTree = SelectionManager.instance.selectedTree;
+        if (selectedTree != null)
+        {
+            selectedTree.GetComponent<ChoppableTree>().GetHit(2);
+        }
+    }
+
+    public void SwingTool() => GlobalStateSystem.instance.ChopTreeMakeYouTired();
 }

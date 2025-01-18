@@ -9,8 +9,6 @@ public class FoodBar : MonoBehaviour
     private Slider slider;
     public TMP_Text foodCounter;
 
-    public GameObject playerState;
-
     private float currentFood, maxFood;
 
     // Start is called before the first frame update
