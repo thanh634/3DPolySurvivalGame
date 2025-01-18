@@ -22,13 +22,16 @@ public class CraftingSystem : MonoBehaviour
     //Craft Buttons
     Button craftPickaxeButton;
     Button craftHardrockButton;
+    Button craftAxeButton;
 
     //Requirement Text
     TMP_Text hardrockReq1;
     TMP_Text pickaxeReq1, pickaxeReq2;
+    TMP_Text axeReq1, axeReq2;
 
     //All Blueprints
     public CraftableBlueprint pickaxeBlueprint = new CraftableBlueprint("Pickaxe", 2, "Rock", 3, "Stick", 3);
+    public CraftableBlueprint axeBlueprint = new CraftableBlueprint("Axe", 2, "Rock", 3, "Stick", 3);
     public CraftableBlueprint hardrockBlueprint = new CraftableBlueprint("Hard Rock", 1, "Rock", 2);
 
     private void Awake()
@@ -61,6 +64,13 @@ public class CraftingSystem : MonoBehaviour
 
         craftPickaxeButton = toolScreenUI.transform.Find("Pickaxe").transform.Find("CraftBtn").GetComponent<Button>();
         craftPickaxeButton.onClick.AddListener(delegate { CraftAnyItem(pickaxeBlueprint); });
+
+        //Axe
+        axeReq1 = toolScreenUI.transform.Find("Axe").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        axeReq2 = toolScreenUI.transform.Find("Axe").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftAxeButton = toolScreenUI.transform.Find("Axe").transform.Find("CraftBtn").GetComponent<Button>();
+        craftAxeButton.onClick.AddListener(delegate { CraftAnyItem(axeBlueprint); });   
 
     }
 
@@ -188,6 +198,20 @@ public class CraftingSystem : MonoBehaviour
         else
         {
             craftPickaxeButton.gameObject.SetActive(false);
+        }
+
+        // ---- AXE ---- //
+
+        axeReq1.text = "3 Rock [" + rock_count + "]";
+        axeReq2.text = "3 Stick [" + stick_count + "]";
+
+        if (rock_count >= 3 && stick_count >= 3)
+        {
+            craftAxeButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            craftAxeButton.gameObject.SetActive(false);
         }
     }
 
