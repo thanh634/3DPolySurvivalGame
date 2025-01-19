@@ -7,6 +7,12 @@ TagManager:
   - Inventory Slot
   - Pickable
   - Quick Slot
+  - activeConstructable
+  - Ground
+  - Tree
+  - Ghost
+  - placedConstructable
+  - WallGhost
   layers:
   - Default
   - TransparentFX

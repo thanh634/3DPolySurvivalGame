@@ -35,7 +35,11 @@ public class SoundManager : MonoBehaviour
 
     public void PlayDropSound() => PlaySound(dropItemSound);
 
+    public void PlayToolSwingSound() => PlaySound(toolSwingSound);
+
     public void PlayCraftSound() => PlaySound(craftItemSound);
+
+    public void PlayPickUpItemSound() => PlaySound(pickupItemSound);
 
     public void PlayGrassWalkSound() => PlaySound(grassWalkSound);
 

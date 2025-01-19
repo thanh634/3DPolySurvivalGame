@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -32,6 +33,12 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private GameObject itemPendingEquipping;
     public bool isInsideQuickSlot;
     public bool isSelected;
+
+
+    public bool isUseable;
+
+    public bool isBuildable;
+
 
     private void Start()
     {
@@ -69,6 +76,64 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         itemInfoUI.SetActive(false);
     }
 
+
+    private void BuildItem()
+    {
+        itemInfoUI.SetActive(false);
+
+        InventorySystem.instance.isOpen = false;
+        InventorySystem.instance.inventoryScreenUI.SetActive(false);
+
+        CraftingSystem.instance.isOpen = false;
+        CraftingSystem.instance.craftingScreenUI.SetActive(false);
+        CraftingSystem.instance.closeAllCategories();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        //SelectionManager.instance.EnableSelection();
+        SelectionManager.instance.enabled = true;
+
+        switch(gameObject.name)
+        {
+            case "Foundation(Clone)":
+                ConstructionManager.instance.ActivateConstructionPlacement("Foundation_Model");
+                break;
+            case "Foundation":
+                ConstructionManager.instance.ActivateConstructionPlacement("Foundation_Model");
+                break;
+            case "Wall(Clone)":
+                ConstructionManager.instance.ActivateConstructionPlacement("Wall_Model");
+                break;
+            case "Wall":
+                ConstructionManager.instance.ActivateConstructionPlacement("Wall_Model");
+                break;
+            case "Doorway(Clone)":
+                ConstructionManager.instance.ActivateConstructionPlacement("Doorway_Model");
+                break;
+            case "Doorway":
+                ConstructionManager.instance.ActivateConstructionPlacement("Doorway_Model");
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Triggered when the mouse button is released over the item that has this script.
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (isConsumable && itemPendingConsumption == gameObject)
+            {
+                DestroyImmediate(gameObject);
+                InventorySystem.instance.ReCalculateList();
+                CraftingSystem.instance.RefreshNeededItems();
+            }
+        }
+    }
+
+
     // Triggered when the mouse is clicked over the item that has this script.
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -87,24 +152,22 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 EquipSystem.instance.AddToQuickSlots(gameObject);
                 isInsideQuickSlot = true;
             }
-        }
 
-
-
-    }
-
-    // Triggered when the mouse button is released over the item that has this script.
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            if (isConsumable && itemPendingConsumption == gameObject)
+            if (isBuildable)
             {
-                DestroyImmediate(gameObject);
-                InventorySystem.instance.ReCalculateList();
-                CraftingSystem.instance.RefreshNeededItems();
+                ConstructionManager.instance.itemToBeBuilt = gameObject;
+                gameObject.SetActive(false);
+
+                ConstructionManager.instance.constructAlertUI.SetActive(true);
+                foreach (GameObject ghost in ConstructionManager.instance.allGhostsInExistence)
+                {
+                    if(ghost) ghost.SetActive(true);
+                }
+
+                BuildItem();
             }
         }
+
     }
 
     private void consumingFunction(float healthEffect, float caloriesEffect, float hydrationEffect)
