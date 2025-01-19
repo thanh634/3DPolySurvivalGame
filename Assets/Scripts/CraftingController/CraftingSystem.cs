@@ -10,29 +10,62 @@ public class CraftingSystem : MonoBehaviour
     public static CraftingSystem instance {  get; private set; }
 
     public GameObject craftingScreenUI;
-    public GameObject toolScreenUI;
+    public GameObject toolScreenUI, survivalScreenUI, refineScreenUI;
 
     public List<string> inventoryItemList = new List<string>();
 
     public bool isOpen;
 
     //Category Buttons
-    Button toolsButton;
+    Button toolsButton, survivalButton, refineButton;
 
     //Craft Buttons
     Button craftPickaxeButton;
-    Button craftHardrockButton;
     Button craftAxeButton;
+    Button craftHammerButton;
+    Button craftShovelButton;
+
+    Button craftTorchButton;
+    Button craftKnifeButton;
+    Button craftSpearButton;
+    Button craftBottleButton;
+
+    Button craftPlankButton;
+    Button craftHardrockButton;
+    Button craftRopeButton;
+    Button craftLeatherButton;
 
     //Requirement Text
-    TMP_Text hardrockReq1;
     TMP_Text pickaxeReq1, pickaxeReq2;
     TMP_Text axeReq1, axeReq2;
+    TMP_Text hammerReq1, hammerReq2;
+    TMP_Text shovelReq1, shovelReq2;
+
+    TMP_Text knifeReq1, knifeReq2;
+    TMP_Text spearReq1, spearReq2;
+    TMP_Text torchReq1, torchReq2;
+    TMP_Text bottleReq1, bottleReq2, bottleReq3;
+
+    TMP_Text plankReq1;
+    TMP_Text hardrockReq1;
+    TMP_Text ropeReq1;
+    TMP_Text leatherReq1;
 
     //All Blueprints
     public CraftableBlueprint pickaxeBlueprint = new CraftableBlueprint("Pickaxe", 2, "Rock", 3, "Stick", 3);
     public CraftableBlueprint axeBlueprint = new CraftableBlueprint("Axe", 2, "Rock", 3, "Stick", 3);
+    public CraftableBlueprint hammerBlueprint = new CraftableBlueprint("Hammer", 2, "Rock", 4, "Stick", 2);
+    public CraftableBlueprint shovelBlueprint = new CraftableBlueprint("Shovel", 2, "Rock", 2, "Stick", 4);
+
+    public CraftableBlueprint knifeBlueprint = new CraftableBlueprint("Knife", 2, "Hard Rock", 1, "Stick", 2);
+    public CraftableBlueprint torchBlueprint = new CraftableBlueprint("Torch", 2, "Coal", 1, "Stick", 2);
+    public CraftableBlueprint spearBlueprint = new CraftableBlueprint("Spear", 2, "Hard Rock", 2, "Stick", 5);
+    public CraftableBlueprint bottleBlueprint = new CraftableBlueprint("Bottle", 3, "String", 1, "Leather", 1, "Plank", 1);
+
+    public CraftableBlueprint plankBlueprint = new CraftableBlueprint("Plank", 1, "Log", 2);
     public CraftableBlueprint hardrockBlueprint = new CraftableBlueprint("Hard Rock", 1, "Rock", 2);
+    public CraftableBlueprint ropeBlueprint = new CraftableBlueprint("Rope", 1, "String", 2);
+    public CraftableBlueprint leatherBlueprint = new CraftableBlueprint("Leather", 1, "Wool", 2);
 
     private void Awake()
     {
@@ -48,15 +81,18 @@ public class CraftingSystem : MonoBehaviour
     void Start()
     {
         isOpen = false;
-        toolsButton = craftingScreenUI.transform.Find("Tools Button").GetComponent<Button>();
 
+        toolsButton = craftingScreenUI.transform.Find("Tools Button").GetComponent<Button>();
         toolsButton.onClick.AddListener(delegate { OpenToolsCategory(); });
 
-        //Hard Rock
-        hardrockReq1 = toolScreenUI.transform.Find("Hard Rock").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        survivalButton = craftingScreenUI.transform.Find("Survival Button").GetComponent<Button>();
+        survivalButton.onClick.AddListener(delegate { OpenSurvivalCategory(); });
 
-        craftHardrockButton = toolScreenUI.transform.Find("Hard Rock").transform.Find("CraftBtn").GetComponent<Button>();
-        craftHardrockButton.onClick.AddListener(delegate { CraftAnyItem(hardrockBlueprint); });
+        refineButton = craftingScreenUI.transform.Find("Refine Button").GetComponent<Button>();
+        refineButton.onClick.AddListener(delegate { OpenRefineCategory(); });
+
+
+        // --- TOOLS --- //
 
         //Pickaxe
         pickaxeReq1 = toolScreenUI.transform.Find("Pickaxe").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
@@ -70,7 +106,78 @@ public class CraftingSystem : MonoBehaviour
         axeReq2 = toolScreenUI.transform.Find("Axe").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
 
         craftAxeButton = toolScreenUI.transform.Find("Axe").transform.Find("CraftBtn").GetComponent<Button>();
-        craftAxeButton.onClick.AddListener(delegate { CraftAnyItem(axeBlueprint); });   
+        craftAxeButton.onClick.AddListener(delegate { CraftAnyItem(axeBlueprint); });
+
+        //Hammer
+        hammerReq1 = toolScreenUI.transform.Find("Hammer").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        hammerReq2 = toolScreenUI.transform.Find("Hammer").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftHammerButton = toolScreenUI.transform.Find("Hammer").transform.Find("CraftBtn").GetComponent<Button>();
+        craftHammerButton.onClick.AddListener(delegate { CraftAnyItem(hammerBlueprint); });
+
+        //Shovel
+        shovelReq1 = toolScreenUI.transform.Find("Shovel").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        shovelReq2 = toolScreenUI.transform.Find("Shovel").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftShovelButton = toolScreenUI.transform.Find("Shovel").transform.Find("CraftBtn").GetComponent<Button>();
+        craftShovelButton.onClick.AddListener(delegate { CraftAnyItem(shovelBlueprint); });
+
+        // --- SURVIVAL --- //
+
+        //Knife
+        knifeReq1 = survivalScreenUI.transform.Find("Knife").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        knifeReq2 = survivalScreenUI.transform.Find("Knife").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftKnifeButton = survivalScreenUI.transform.Find("Knife").transform.Find("CraftBtn").GetComponent<Button>();
+        craftKnifeButton.onClick.AddListener(delegate { CraftAnyItem(knifeBlueprint); });
+
+        //Torch
+        torchReq1 = survivalScreenUI.transform.Find("Torch").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        torchReq2 = survivalScreenUI.transform.Find("Torch").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftTorchButton = survivalScreenUI.transform.Find("Torch").transform.Find("CraftBtn").GetComponent<Button>();
+        craftTorchButton.onClick.AddListener(delegate { CraftAnyItem(torchBlueprint); });
+
+        //Spear
+        spearReq1 = survivalScreenUI.transform.Find("Spear").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        spearReq2 = survivalScreenUI.transform.Find("Spear").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftSpearButton = survivalScreenUI.transform.Find("Spear").transform.Find("CraftBtn").GetComponent<Button>();
+        craftSpearButton.onClick.AddListener(delegate { CraftAnyItem(spearBlueprint); });
+
+        //Bottle
+        bottleReq1 = survivalScreenUI.transform.Find("Bottle").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        bottleReq2 = survivalScreenUI.transform.Find("Bottle").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+        bottleReq3 = survivalScreenUI.transform.Find("Bottle").transform.Find("Requirement").GetChild(2).GetComponent<TMP_Text>();
+
+        craftBottleButton = survivalScreenUI.transform.Find("Bottle").transform.Find("CraftBtn").GetComponent<Button>();
+        craftBottleButton.onClick.AddListener(delegate { CraftAnyItem(bottleBlueprint); });
+
+        // --- REFINE --- //
+
+        //Hard Rock
+        hardrockReq1 = refineScreenUI.transform.Find("Hard Rock").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+
+        craftHardrockButton = refineScreenUI.transform.Find("Hard Rock").transform.Find("CraftBtn").GetComponent<Button>();
+        craftHardrockButton.onClick.AddListener(delegate { CraftAnyItem(hardrockBlueprint); });
+
+        //Plank
+        plankReq1 = refineScreenUI.transform.Find("Plank").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+
+        craftPlankButton = refineScreenUI.transform.Find("Plank").transform.Find("CraftBtn").GetComponent<Button>();
+        craftPlankButton.onClick.AddListener(delegate { CraftAnyItem(plankBlueprint); });
+
+        //Leather
+        leatherReq1 = refineScreenUI.transform.Find("Leather").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+
+        craftLeatherButton = refineScreenUI.transform.Find("Leather").transform.Find("CraftBtn").GetComponent<Button>();
+        craftLeatherButton.onClick.AddListener(delegate { CraftAnyItem(leatherBlueprint); });
+
+        //Rope
+        ropeReq1 = refineScreenUI.transform.Find("Rope").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+
+        craftRopeButton = refineScreenUI.transform.Find("Rope").transform.Find("CraftBtn").GetComponent<Button>();
+        craftRopeButton.onClick.AddListener(delegate { CraftAnyItem(ropeBlueprint); });
 
     }
 
@@ -91,9 +198,9 @@ public class CraftingSystem : MonoBehaviour
         else if ((Input.GetKeyDown(KeyCode.O)) && isOpen)
         {
             craftingScreenUI.SetActive(false);
-            toolScreenUI.SetActive(false);
+            closeAlCategories();
 
-            if(!InventorySystem.instance.isOpen)
+            if (!InventorySystem.instance.isOpen)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = true;
@@ -111,12 +218,24 @@ public class CraftingSystem : MonoBehaviour
         toolScreenUI.SetActive(true);
     }
 
+    private void OpenSurvivalCategory()
+    {
+        craftingScreenUI.SetActive(false);
+        survivalScreenUI.SetActive(true);
+    }
+
+    private void OpenRefineCategory()
+    {
+        craftingScreenUI.SetActive(false);
+        refineScreenUI.SetActive(true);
+    }
+
     private void CraftAnyItem(CraftableBlueprint blueprintToCraft)
     {
-
+        SoundManager.instance.PlayCraftSound();
 
         // Remove resources from inventory
-        switch(blueprintToCraft.numOfRequirements)
+        switch (blueprintToCraft.numOfRequirements)
         {
             case 1:
                 InventorySystem.instance.RemoveItem(blueprintToCraft.req1, blueprintToCraft.req1Amount);
@@ -157,7 +276,14 @@ public class CraftingSystem : MonoBehaviour
         int rock_count = 0;
         int stick_count = 0;
         int log_count = 0;
+        int string_count = 0;
+        int wool_count = 0;
+        int coal_count = 0;
 
+        int plank_count = 0;
+        int hard_rock_count = 0;
+        int rope_count = 0;
+        int leather_count = 0;
 
         inventoryItemList = InventorySystem.instance.itemList;
 
@@ -174,49 +300,92 @@ public class CraftingSystem : MonoBehaviour
                 case "Log":
                     log_count++;
                     break;
+                case "String":
+                    string_count++;
+                    break;
+                case "Wool":
+                    wool_count++;
+                    break;
+                case "Coal":
+                    coal_count++;
+                    break;
+                case "Plank":
+                    plank_count++;
+                    break;
+                case "Hard Rock":
+                    hard_rock_count++;
+                    break;
+                case "Rope":
+                    rope_count++;
+                    break;
+                case "Leather":
+                    leather_count++;
+                    break;
             }
         }
 
-        // ---- HARD ROCK ---- //
-
-        hardrockReq1.text = "2 Rock [" + rock_count + "]";
-
-        if (rock_count >= 2)
-        {
-            craftHardrockButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            craftHardrockButton.gameObject.SetActive(false);
-        }
-
         // ---- PICKAXE ---- //
-
         pickaxeReq1.text = "3 Rock [" + rock_count + "]";
         pickaxeReq2.text = "3 Stick [" + stick_count + "]";
-
-        if (rock_count >= 3 && stick_count >= 3)
-        {
-            craftPickaxeButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            craftPickaxeButton.gameObject.SetActive(false);
-        }
+        craftPickaxeButton.gameObject.SetActive(rock_count >= 3 && stick_count >= 3);
 
         // ---- AXE ---- //
-
         axeReq1.text = "3 Rock [" + rock_count + "]";
         axeReq2.text = "3 Stick [" + stick_count + "]";
+        craftAxeButton.gameObject.SetActive(rock_count >= 3 && stick_count >= 3);
 
-        if (rock_count >= 3 && stick_count >= 3)
-        {
-            craftAxeButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            craftAxeButton.gameObject.SetActive(false);
-        }
+        // ---- HAMMER ---- //
+        hammerReq1.text = "4 Rock [" + rock_count + "]";
+        hammerReq2.text = "2 Stick [" + stick_count + "]";
+        craftHammerButton.gameObject.SetActive(rock_count >= 4 && stick_count >= 2);
+
+        // ---- SHOVEL ---- //
+        shovelReq1.text = "2 Rock [" + rock_count + "]";
+        shovelReq2.text = "4 Stick [" + stick_count + "]";
+        craftShovelButton.gameObject.SetActive(rock_count >= 2 && stick_count >= 4);
+
+        // ---- KNIFE ---- //
+        knifeReq1.text = "1 Hard Rock [" + hard_rock_count + "]";
+        knifeReq2.text = "2 Stick [" + stick_count + "]";
+        craftKnifeButton.gameObject.SetActive(hard_rock_count >= 1 && stick_count >= 2);
+
+        // ---- TORCH ---- //
+        torchReq1.text = "1 Coal [" + coal_count + "]";
+        torchReq2.text = "2 Stick [" + stick_count + "]";
+        craftTorchButton.gameObject.SetActive(coal_count >= 1 && stick_count >= 2);
+
+        // ---- SPEAR ---- //
+        spearReq1.text = "2 Hard Rock [" + hard_rock_count + "]";
+        spearReq2.text = "5 Stick [" + stick_count + "]";
+        craftSpearButton.gameObject.SetActive(hard_rock_count >= 2 && stick_count >= 5);
+
+        // ---- BOTTLE ---- //
+        bottleReq1.text = "1 String [" + string_count + "]";
+        bottleReq2.text = "1 Leather [" + leather_count + "]";
+        bottleReq3.text = "1 Plank [" + plank_count + "]";
+        craftBottleButton.gameObject.SetActive(string_count >= 1 && leather_count >= 1 && plank_count >= 1);
+
+        // ---- PLANK ---- //
+        plankReq1.text = "2 Log [" + log_count + "]";
+        craftPlankButton.gameObject.SetActive(log_count >= 2);
+
+        // ---- ROPE ---- //
+        ropeReq1.text = "2 String [" + string_count + "]";
+        craftRopeButton.gameObject.SetActive(string_count >= 2);
+
+        // ---- LEATHER ---- //
+        leatherReq1.text = "2 Wool [" + wool_count + "]";
+        craftLeatherButton.gameObject.SetActive(wool_count >= 2);
+
+        // ---- HARD ROCK ---- //
+        hardrockReq1.text = "2 Rock [" + rock_count + "]";
+        craftHardrockButton.gameObject.SetActive(rock_count >= 2);
     }
 
+    public void closeAlCategories()
+    {
+        toolScreenUI.SetActive(false);
+        survivalScreenUI.SetActive(false);
+        refineScreenUI.SetActive(false);
+    }
 }
