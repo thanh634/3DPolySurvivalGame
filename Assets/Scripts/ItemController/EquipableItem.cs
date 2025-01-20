@@ -6,6 +6,8 @@ using UnityEngine;
 public class EquipableItem : MonoBehaviour
 {
     public Animator animator;
+    public bool swingWait = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,11 +18,12 @@ public class EquipableItem : MonoBehaviour
     void Update()
     {
         GameObject selectedTree = SelectionManager.instance.selectedTree;
-        if(Input.GetMouseButtonDown(0) && (!InventorySystem.instance.isOpen && !CraftingSystem.instance.isOpen && !ConstructionManager.instance.inConstructionMode))
+        if(Input.GetMouseButtonDown(0) && !swingWait && (!InventorySystem.instance.isOpen && !CraftingSystem.instance.isOpen && !ConstructionManager.instance.inConstructionMode))
         {
-
+            swingWait = true;
             animator.SetTrigger("isHit");
 
+            StartCoroutine(NewSwingDelay());
         }
     }
 
@@ -33,5 +36,13 @@ public class EquipableItem : MonoBehaviour
         }
     }
 
+    IEnumerator NewSwingDelay()
+    {
+        yield return new WaitForSeconds(1f);
+
+        swingWait = false;
+    }
+
     public void SwingTool() => GlobalStateSystem.instance.ChopTreeMakeYouTired();
+    public void MakeSwingSound() => SoundManager.instance.PlayToolSwingSound();
 }

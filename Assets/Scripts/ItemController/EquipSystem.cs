@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -225,4 +226,35 @@ public class EquipSystem : MonoBehaviour
             return false;
         }
     }
+
+    public bool IsHoldingWeapon()
+    {
+        if (selectedItem != null)
+        {
+            if (selectedItem.GetComponent<Weapon>() != null)
+            {
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+    }
+
+    public int GetWeaponDamage()
+    {
+        if(selectedItem != null)
+        {
+            return selectedItem.GetComponent<Weapon>().weaponDamage;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public bool SwingLock()
+    {
+        return selectedItemModel.GetComponent<EquipableItem>().swingWait;
+    }
+
 }

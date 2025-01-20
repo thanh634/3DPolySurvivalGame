@@ -276,7 +276,7 @@ public class CraftingSystem : MonoBehaviour
 
     private void CraftAnyItem(CraftableBlueprint blueprintToCraft)
     {
-        //SoundManager.instance.PlayCraftSound();
+        SoundManager.instance.PlayCraftSound();
 
         // Remove resources from inventory
         switch (blueprintToCraft.numOfRequirements)

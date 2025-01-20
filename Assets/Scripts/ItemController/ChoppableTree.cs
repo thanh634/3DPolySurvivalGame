@@ -18,9 +18,10 @@ public class ChoppableTree : MonoBehaviour
 
     public void GetHit(int hp)
     {
+
         if (canBeChopped)
         {
-
+            SoundManager.instance.PlayTreeChoppedSound();
             animator.SetTrigger("shake");
             treeHealth -= hp;
 

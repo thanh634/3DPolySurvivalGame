@@ -175,10 +175,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Log
       objectReference: {fileID: 0}
-    - target: {fileID: 3660791815390348368, guid: b54af8023c23f574b9b7ef4c979fd29a, type: 3}
-      propertyPath: m_TagString
-      value: Pickable
-      objectReference: {fileID: 0}
     - target: {fileID: 9201570062315186728, guid: b54af8023c23f574b9b7ef4c979fd29a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.199
@@ -466,10 +462,6 @@ PrefabInstance:
     - target: {fileID: 5410411147750017251, guid: 3eedd3f5c293837479cd071a64dfab7c, type: 3}
       propertyPath: m_Name
       value: Log
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410411147750017251, guid: 3eedd3f5c293837479cd071a64dfab7c, type: 3}
-      propertyPath: m_TagString
-      value: Pickable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

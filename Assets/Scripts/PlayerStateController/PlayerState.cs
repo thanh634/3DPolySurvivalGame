@@ -87,4 +87,18 @@ public class PlayerState : MonoBehaviour
     {
         currentThirst = newHydration;
     }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+
+        if(currentHealth <= 0)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
 }

@@ -11,6 +11,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource craftItemSound;
     public AudioSource pickupItemSound;
     public AudioSource grassWalkSound;
+    public AudioSource treeChoppedSound;
 
     //Music
     public AudioSource startingZoneBGM;
@@ -42,5 +43,7 @@ public class SoundManager : MonoBehaviour
     public void PlayPickUpItemSound() => PlaySound(pickupItemSound);
 
     public void PlayGrassWalkSound() => PlaySound(grassWalkSound);
+
+    public void PlayTreeChoppedSound() => PlaySound(treeChoppedSound);
 
 }
