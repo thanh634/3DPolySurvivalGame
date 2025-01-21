@@ -33,12 +33,12 @@ public class BearChaseState : StateMachineBehaviour
 
         float distanceFromPlayer = Vector3.Distance(player.position, animator.transform.position);
 
-        if(distanceFromPlayer > stopChaseDistance)
+        if(distanceFromPlayer > stopChaseDistance || PlayerState.instance.currentHealth <= 0)
         {
             animator.SetBool("isChasing", false);
         }
 
-        if (distanceFromPlayer < attackingDistance)
+        if (distanceFromPlayer < attackingDistance && PlayerState.instance.currentHealth > 0)
         {
             animator.SetTrigger("attack");
         }

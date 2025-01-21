@@ -10,6 +10,7 @@ public class MenuManager : MonoBehaviour
     public GameObject uiCanvas;
     public GameObject saveMenu;
     public GameObject settingMenu;
+    public GameObject respawnMenu;
     public GameObject menu;
 
     public bool isMenuOpen = false;
@@ -22,7 +23,7 @@ public class MenuManager : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.M) && !isMenuOpen) {
+        if ((Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape)) && !isMenuOpen) {
             uiCanvas.SetActive(false);
             menuCanvas.SetActive(true);
             isMenuOpen = true;
@@ -33,9 +34,10 @@ public class MenuManager : MonoBehaviour
             // SelectionManager.instance.DisableSelection();
             SelectionManager.instance.GetComponent<SelectionManager>().enabled = false;
 
-        } else if (Input.GetKeyDown(KeyCode.M) && isMenuOpen) {
+        } else if ((Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape)) && isMenuOpen) {
             saveMenu.SetActive(false);
             settingMenu.SetActive(false);
+            respawnMenu.SetActive(false);
             menu.SetActive(true);
             
             uiCanvas.SetActive(true);
@@ -52,5 +54,21 @@ public class MenuManager : MonoBehaviour
             
         }
 
+    }
+
+    public void LoadRespawnMenu()
+    {
+        uiCanvas.SetActive(false);
+        menuCanvas.SetActive(true);
+        isMenuOpen = true;
+
+        menu.SetActive(false);
+        respawnMenu.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        // SelectionManager.instance.DisableSelection();
+        SelectionManager.instance.GetComponent<SelectionManager>().enabled = false;
     }
 }

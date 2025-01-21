@@ -11,7 +11,7 @@ public class BearAttackState : StateMachineBehaviour
     NavMeshAgent agent;
 
     public float stopAttackDistance = 2f;
-    private float attackRate = 0.3f;
+    private float attackRate = 0.5f;
     private int damageInflict = 30;
     private float attackTimer;
 

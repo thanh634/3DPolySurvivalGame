@@ -18,7 +18,7 @@ public class EquipableItem : MonoBehaviour
     void Update()
     {
         GameObject selectedTree = SelectionManager.instance.selectedTree;
-        if(Input.GetMouseButtonDown(0) && !swingWait && (!InventorySystem.instance.isOpen && !CraftingSystem.instance.isOpen && !ConstructionManager.instance.inConstructionMode))
+        if(Input.GetMouseButtonDown(0) && !swingWait && (!InventorySystem.instance.isOpen && !CraftingSystem.instance.isOpen && !ConstructionManager.instance.inConstructionMode && !MenuManager.Instance.isMenuOpen))
         {
             swingWait = true;
             animator.SetTrigger("isHit");

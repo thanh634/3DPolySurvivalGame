@@ -119,7 +119,10 @@ public class PlayerState : MonoBehaviour
         {
             StartCoroutine(DecreaseLightIntensityOverTime(directionalLight, deathLightIntensity, 2f)); // Example: 1 second duration
         }
-        StartCoroutine(RespawnPlayer());
+
+
+        MenuManager.Instance.LoadRespawnMenu();
+
     }
 
     private IEnumerator DecreaseLightIntensityOverTime(Light light, float targetIntensity, float duration)
@@ -147,16 +150,19 @@ public class PlayerState : MonoBehaviour
         }
     }
 
+    public void Respawn()
+    {
+        StartCoroutine(RespawnPlayer());
+    }
+
     private IEnumerator RespawnPlayer()
     {
-        yield return new WaitForSeconds(1);
 
+        yield return new WaitForSeconds(1f);
         // Reset player position
-        playerBody.transform.position = new Vector3(26, 4, 69);
+        playerBody.transform.position = new Vector3(26f, 4f, 69f);
 
-        // Wait for 1 seconds
-        yield return new WaitForSeconds(1);
-
+        yield return new WaitForSeconds(0.25f);
         // Implement respawn logic here
         Debug.Log("Player has been respawned.");
         
@@ -170,7 +176,7 @@ public class PlayerState : MonoBehaviour
         if (directionalLight != null)
         {
             Debug.Log("Resetting light intensity.");
-            directionalLight.intensity = 1f; // Reset to original intensity
+            directionalLight.intensity = 1.5f; // Reset to original intensity
         }
     }
 
