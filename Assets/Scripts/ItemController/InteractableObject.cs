@@ -18,7 +18,6 @@ public class InteractableObject : MonoBehaviour
 
         if(!InventorySystem.instance.isFull)
         {
-            Debug.Log($"{ItemName} added to inventory.");
             Destroy(gameObject);
         }
 

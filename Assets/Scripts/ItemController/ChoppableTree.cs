@@ -18,9 +18,10 @@ public class ChoppableTree : MonoBehaviour
 
     public void GetHit(int hp)
     {
+
         if (canBeChopped)
         {
-
+            SoundManager.instance.PlayTreeChoppedSound();
             animator.SetTrigger("shake");
             treeHealth -= hp;
 
@@ -42,7 +43,7 @@ public class ChoppableTree : MonoBehaviour
         SelectionManager.instance.selectedTree = null;
         SelectionManager.instance.chopHolder.gameObject.SetActive(false);
 
-        GameObject brokenTree = Instantiate(Resources.Load<GameObject>("ChoppedTree"),
+        GameObject brokenTree = Instantiate(Resources.Load<GameObject>("Models/ChoppedTree"),
             new Vector3(treePosition.x, treePosition.y, treePosition.z), Quaternion.Euler(0, 0, 0));
 
     }

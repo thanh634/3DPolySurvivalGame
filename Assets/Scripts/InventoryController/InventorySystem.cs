@@ -51,7 +51,7 @@ public class InventorySystem : MonoBehaviour
     void Update()
     {
 
-        if ((Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Tab)) && !isOpen)
+        if ((Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Tab)) && !isOpen && !ConstructionManager.instance.inConstructionMode)
         {
             inventoryScreenUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
@@ -94,7 +94,7 @@ public class InventorySystem : MonoBehaviour
         slotToEquip = FindNextEmptySlot();
         if(!slotToEquip)
         {
-            Debug.Log("The inventory is full");
+            StartCoroutine(TriggerPickUpPopUp("The inventory is full", null));
             isFull = true;
         }
         else
@@ -116,8 +116,16 @@ public class InventorySystem : MonoBehaviour
     IEnumerator TriggerPickUpPopUp(string itemName, Sprite itemSprite)
     {
 
-        pickUpText.text = "pick up " + itemName + " x 1";
-        pickUpImage.sprite = itemSprite;
+        if(itemSprite ==null)
+        {
+            pickUpText.text = itemName;
+        }
+        else
+        {
+            pickUpText.text = "pick up " + itemName + " x 1";
+            pickUpImage.sprite = itemSprite;
+        }
+
 
         pickUpNotification.SetActive(true);
 

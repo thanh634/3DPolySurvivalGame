@@ -23,5 +23,6 @@ public class GlobalStateSystem : MonoBehaviour
     public void ChopTreeMakeYouTired()
     {
         PlayerState.instance.currentFood -= foodSpentChoppingWood;
+
     }
 }

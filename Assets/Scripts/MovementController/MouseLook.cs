@@ -18,7 +18,7 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (InventorySystem.instance.isOpen || CraftingSystem.instance.isOpen)
+        if (InventorySystem.instance.isOpen || CraftingSystem.instance.isOpen || MenuManager.Instance.isMenuOpen)
         {
             return;
         }

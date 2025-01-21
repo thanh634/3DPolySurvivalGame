@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -46,15 +47,12 @@ public class EquipSystem : MonoBehaviour
         //    }
         //}
 
-        // Existing logic
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("Alpha1 is triggered");
             SelectQuickSlot(1);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Debug.Log("Alpha2 is triggered");
             SelectQuickSlot(2);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -156,7 +154,7 @@ public class EquipSystem : MonoBehaviour
         }
 
         string selectedItemName = selectedItem.name.Replace("(Clone)", "");
-        selectedItemModel = Instantiate(Resources.Load<GameObject>(selectedItemName + "_Model"),
+        selectedItemModel = Instantiate(Resources.Load<GameObject>("Models/"+ selectedItemName + "_Model"),
             new Vector3(0.4f, 0.2f , 0.4f), Quaternion.Euler(0, -110f, -20f));
 
         selectedItemModel.transform.SetParent(toolHolder.transform, false);
@@ -228,4 +226,35 @@ public class EquipSystem : MonoBehaviour
             return false;
         }
     }
+
+    public bool IsHoldingWeapon()
+    {
+        if (selectedItem != null)
+        {
+            if (selectedItem.GetComponent<Weapon>() != null)
+            {
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+    }
+
+    public int GetWeaponDamage()
+    {
+        if(selectedItem != null)
+        {
+            return selectedItem.GetComponent<Weapon>().weaponDamage;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public bool SwingLock()
+    {
+        return selectedItemModel.GetComponent<EquipableItem>().swingWait;
+    }
+
 }

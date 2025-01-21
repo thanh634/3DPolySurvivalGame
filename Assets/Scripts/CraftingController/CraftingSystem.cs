@@ -10,14 +10,14 @@ public class CraftingSystem : MonoBehaviour
     public static CraftingSystem instance {  get; private set; }
 
     public GameObject craftingScreenUI;
-    public GameObject toolScreenUI, survivalScreenUI, refineScreenUI;
+    public GameObject toolScreenUI, survivalScreenUI, refineScreenUI, constructionScreenUI;
 
     public List<string> inventoryItemList = new List<string>();
 
     public bool isOpen;
 
     //Category Buttons
-    Button toolsButton, survivalButton, refineButton;
+    Button toolsButton, survivalButton, refineButton, constructionButton;
 
     //Craft Buttons
     Button craftPickaxeButton;
@@ -35,6 +35,11 @@ public class CraftingSystem : MonoBehaviour
     Button craftRopeButton;
     Button craftLeatherButton;
 
+    Button craftFoundationButton;
+    Button craftWallButton;
+    Button craftDoorwayButton;
+
+
     //Requirement Text
     TMP_Text pickaxeReq1, pickaxeReq2;
     TMP_Text axeReq1, axeReq2;
@@ -51,6 +56,10 @@ public class CraftingSystem : MonoBehaviour
     TMP_Text ropeReq1;
     TMP_Text leatherReq1;
 
+    TMP_Text foundationReq1;
+    TMP_Text wallReq1;
+    TMP_Text doorwayReq1, doorwayReq2;
+
     //All Blueprints
     public CraftableBlueprint pickaxeBlueprint = new CraftableBlueprint("Pickaxe", 2, "Rock", 3, "Stick", 3);
     public CraftableBlueprint axeBlueprint = new CraftableBlueprint("Axe", 2, "Rock", 3, "Stick", 3);
@@ -66,6 +75,11 @@ public class CraftingSystem : MonoBehaviour
     public CraftableBlueprint hardrockBlueprint = new CraftableBlueprint("Hard Rock", 1, "Rock", 2);
     public CraftableBlueprint ropeBlueprint = new CraftableBlueprint("Rope", 1, "String", 2);
     public CraftableBlueprint leatherBlueprint = new CraftableBlueprint("Leather", 1, "Wool", 2);
+
+    public CraftableBlueprint foundationBlueprint = new CraftableBlueprint("Foundation", 1, "Plank", 4);
+    public CraftableBlueprint wallBlueprint = new CraftableBlueprint("Wall", 1, "Plank", 2);
+    public CraftableBlueprint doorwayBlueprint = new CraftableBlueprint("Doorway", 2, "Stick", 2, "Plank", 1);
+
 
     private void Awake()
     {
@@ -90,6 +104,9 @@ public class CraftingSystem : MonoBehaviour
 
         refineButton = craftingScreenUI.transform.Find("Refine Button").GetComponent<Button>();
         refineButton.onClick.AddListener(delegate { OpenRefineCategory(); });
+
+        constructionButton = craftingScreenUI.transform.Find("Construction Button").GetComponent<Button>();
+        constructionButton.onClick.AddListener(delegate { OpenConstructionCategory(); });
 
 
         // --- TOOLS --- //
@@ -179,6 +196,27 @@ public class CraftingSystem : MonoBehaviour
         craftRopeButton = refineScreenUI.transform.Find("Rope").transform.Find("CraftBtn").GetComponent<Button>();
         craftRopeButton.onClick.AddListener(delegate { CraftAnyItem(ropeBlueprint); });
 
+        // --- CONSTRUCTION --- //
+
+        //Foundation
+        foundationReq1 = constructionScreenUI.transform.Find("Foundation").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+
+        craftFoundationButton = constructionScreenUI.transform.Find("Foundation").transform.Find("CraftBtn").GetComponent<Button>();
+        craftFoundationButton.onClick.AddListener(delegate { CraftAnyItem(foundationBlueprint); });
+
+        //Wall
+        wallReq1 = constructionScreenUI.transform.Find("Wall").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+
+        craftWallButton = constructionScreenUI.transform.Find("Wall").transform.Find("CraftBtn").GetComponent<Button>();
+        craftWallButton.onClick.AddListener(delegate { CraftAnyItem(wallBlueprint); });
+
+        //Doorway
+        doorwayReq1 = constructionScreenUI.transform.Find("Doorway").transform.Find("Requirement").GetChild(0).GetComponent<TMP_Text>();
+        doorwayReq2 = constructionScreenUI.transform.Find("Doorway").transform.Find("Requirement").GetChild(1).GetComponent<TMP_Text>();
+
+        craftDoorwayButton = constructionScreenUI.transform.Find("Doorway").transform.Find("CraftBtn").GetComponent<Button>();
+        craftDoorwayButton.onClick.AddListener(delegate { CraftAnyItem(doorwayBlueprint); });
+
     }
 
     // Update is called once per frame
@@ -186,7 +224,7 @@ public class CraftingSystem : MonoBehaviour
     {
         //RefreshNeededItems();
 
-        if ((Input.GetKeyDown(KeyCode.O)) && !isOpen)
+        if ((Input.GetKeyDown(KeyCode.O) || Input.GetKeyDown(KeyCode.C)) && !isOpen && !ConstructionManager.instance.inConstructionMode)
         {
 
             craftingScreenUI.SetActive(true);
@@ -195,10 +233,10 @@ public class CraftingSystem : MonoBehaviour
             isOpen = true;
 
         }
-        else if ((Input.GetKeyDown(KeyCode.O)) && isOpen)
+        else if ((Input.GetKeyDown(KeyCode.O) || Input.GetKeyDown(KeyCode.C)) && isOpen)
         {
             craftingScreenUI.SetActive(false);
-            closeAlCategories();
+            closeAllCategories();
 
             if (!InventorySystem.instance.isOpen)
             {
@@ -228,6 +266,12 @@ public class CraftingSystem : MonoBehaviour
     {
         craftingScreenUI.SetActive(false);
         refineScreenUI.SetActive(true);
+    }
+
+    private void OpenConstructionCategory()
+    {
+        craftingScreenUI.SetActive(false);
+        constructionScreenUI.SetActive(true);
     }
 
     private void CraftAnyItem(CraftableBlueprint blueprintToCraft)
@@ -380,12 +424,26 @@ public class CraftingSystem : MonoBehaviour
         // ---- HARD ROCK ---- //
         hardrockReq1.text = "2 Rock [" + rock_count + "]";
         craftHardrockButton.gameObject.SetActive(rock_count >= 2);
+
+        // ---- FOUNDATION ---- //
+        foundationReq1.text = "4 Plank [" + plank_count + "]";
+        craftFoundationButton.gameObject.SetActive(plank_count >= 4);
+
+        // ---- WALL ---- //
+        wallReq1.text = "2 Plank [" + plank_count + "]";
+        craftWallButton.gameObject.SetActive(plank_count >= 2);
+
+        // --- DOORWAY --- //
+        doorwayReq1.text = "2 Stick [" + stick_count + "]";
+        doorwayReq2.text = "1 Plank [" + plank_count + "]";
+        craftDoorwayButton.gameObject.SetActive(stick_count >= 2 && plank_count >= 1);
     }
 
-    public void closeAlCategories()
+    public void closeAllCategories()
     {
         toolScreenUI.SetActive(false);
         survivalScreenUI.SetActive(false);
         refineScreenUI.SetActive(false);
+        constructionScreenUI.SetActive(false);
     }
 }

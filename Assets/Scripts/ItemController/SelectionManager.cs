@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class SelectionManager : MonoBehaviour
     public bool pickUpisVisible;
 
     public GameObject selectedTree;
+    public GameObject selectedAnimal;
     public Image chopHolder;
 
     private void Start()
@@ -52,6 +54,7 @@ public class SelectionManager : MonoBehaviour
             {
                 var selectionTransform = hit.transform;
                 InteractableObject thisObj = selectionTransform.GetComponent<InteractableObject>();
+                Animal thisAnimal = selectionTransform.GetComponent<Animal>(); 
 
 
                 ChoppableTree choppableTree = selectionTransform.GetComponent<ChoppableTree>();
@@ -73,7 +76,7 @@ public class SelectionManager : MonoBehaviour
                 }
 
 
-                if (selectionTransform.GetComponent<InteractableObject>())
+                if (thisObj)
                 {
                     interaction_text.text = thisObj.GetItemName();
                     interaction_Info_UI.SetActive(true);
@@ -86,6 +89,7 @@ public class SelectionManager : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.E))
                         {
+                            SoundManager.instance.PlayPickUpItemSound();
                             thisObj.AddToInventory();
                         }
                     }
@@ -100,8 +104,60 @@ public class SelectionManager : MonoBehaviour
                 {
                     centerPointIcon.gameObject.SetActive(true);
                     pickUpIcon.gameObject.SetActive(false);
-                    interaction_Info_UI.SetActive(false);
                     pickUpisVisible = false;
+                }
+
+                if (thisAnimal)
+                {
+                    interaction_Info_UI.SetActive(true);
+                    selectedAnimal = thisAnimal.gameObject;
+
+                    if (thisAnimal.isDead)
+                    {
+                        interaction_text.text = "Loot";
+
+                        centerPointIcon.gameObject.SetActive(false);
+                        pickUpIcon.gameObject.SetActive(true);
+                        pickUpisVisible = true;
+
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            Lootable lootable = thisAnimal.GetComponent<Lootable>();
+
+                            SoundManager.instance.PlayPickUpItemSound();
+                            Loot(lootable);
+                        }
+
+                    }
+                    else
+                    {
+                        thisAnimal.playerInRange = true;
+
+                        interaction_text.text = thisAnimal.name;
+
+                        centerPointIcon.gameObject.SetActive(true);
+                        pickUpIcon.gameObject.SetActive(false);
+                        pickUpisVisible = false;
+
+                        if (Input.GetMouseButtonDown(0) && EquipSystem.instance.IsHoldingWeapon() && !EquipSystem.instance.SwingLock())
+                        {
+                            StartCoroutine(DealDamageTo(thisAnimal, 0.3f, EquipSystem.instance.GetWeaponDamage()));
+                        }
+                    }
+                }
+                else
+                {
+                    if (selectedAnimal != null)
+                    {
+                        selectedAnimal.gameObject.GetComponent<Animal>().playerInRange = false;
+                        selectedAnimal = null;
+                    }
+                }
+
+                if(!thisObj && !thisAnimal)
+                {
+                    interaction_text.text = "";
+                    interaction_Info_UI.SetActive(false);
                 }
             }
             else // if not hit anything
@@ -117,5 +173,49 @@ public class SelectionManager : MonoBehaviour
         }
 
 
+    }
+
+    private void Loot(Lootable lootable)
+    {
+        if (!lootable.wasLootCalculated)
+        {
+            List<LootRecieved> receivedLoot = new List<LootRecieved>();
+
+            foreach (LootPossibility loot in lootable.possibleLoot)
+            {
+                var lootAmmount = UnityEngine.Random.Range(loot.ammountMin, loot.ammountMax + 1);
+                if(lootAmmount != 0)
+                {
+                    LootRecieved lt = new LootRecieved();
+                    lt.item = loot.item;
+                    lt.ammount = lootAmmount;
+
+                    receivedLoot.Add(lt);
+                }
+            }
+
+            lootable.finalLoot = receivedLoot;
+            lootable.wasLootCalculated = true;
+        }
+
+        Vector3 lootSpawnPosition = lootable.gameObject.transform.position;
+
+        foreach(LootRecieved loot in lootable.finalLoot)
+        {
+            for (int i = 0; i < loot.ammount; i++)
+            {
+                GameObject lootSpawn = Instantiate(Resources.Load<GameObject>("Models/Loots/" + loot.item.name + "_Model"), 
+                    new Vector3(lootSpawnPosition.x, lootSpawnPosition.y + 0.3f, lootSpawnPosition.z), 
+                    Quaternion.Euler(0,0, 0));
+            }
+        }
+
+        Destroy(lootable.gameObject);
+    }
+
+    IEnumerator DealDamageTo(Animal thisAnimal, float delay, int damage)
+    {
+        yield return new WaitForSeconds(delay);
+        thisAnimal.TakeDamage(damage);
     }
 }
