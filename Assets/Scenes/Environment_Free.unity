@@ -14613,13 +14613,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02daf578b6314f4896ad8a95b4f47e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBody: {fileID: 614819011}
+  playerBody: {fileID: 139766767}
   currentHealth: 0
   maxHealth: 100
   currentFood: 0
   maxFood: 1000
   currentThirst: 0
   maxThirst: 1000
+  playerDeathSound: {fileID: 8300000, guid: bc94cca96c979bcc5b8c51908a4c2d21, type: 3}
+  playerPainSound: {fileID: 8300000, guid: 45b4b465450a12b55a9e222dea1a1d69, type: 3}
+  directionalLight: {fileID: 1570689919}
+  deathLightIntensity: 0.1
 --- !u!1 &622030972
 GameObject:
   m_ObjectHideFlags: 0
@@ -20969,6 +20973,10 @@ PrefabInstance:
     - target: {fileID: 2329625804866906595, guid: bebdbff8ad1e9e6428864d907c5bf762, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5779438876398731454, guid: bebdbff8ad1e9e6428864d907c5bf762, type: 3}
+      propertyPath: m_Volume
+      value: 0.103
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
